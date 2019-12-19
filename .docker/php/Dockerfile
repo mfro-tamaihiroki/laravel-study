@@ -26,7 +26,7 @@ RUN apt-get install vim -y
 # 各種設定
 COPY php.ini /usr/local/etc/php
 
-# apache2のドキュメントルート変更
+# apache2
 COPY apache2.conf /etc/apache2
 COPY 000-default.conf /etc/apache2/sites-available/
 
