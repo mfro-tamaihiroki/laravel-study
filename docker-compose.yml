@@ -1,0 +1,31 @@
+version: '3'
+services:
+  php:
+    build: .docker/php
+    container_name: "laravel-php"
+    volumes:
+      - ./:/var/www/html
+    working_dir: /var/www/html
+    tty: true
+    ports:
+      - '80:80'
+      - '443:443'
+
+  mysql:
+    image: mysql:5.7
+    container_name: "laravel-mysql"
+    restart: always
+    environment:
+      MYSQL_DATABASE: database
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+    ports:
+      - 3306:3306
+    volumes:
+      - .docker/mysql:/var/lib/mysql
+    command: --innodb-use-native-aio=0
+
+
+
+
