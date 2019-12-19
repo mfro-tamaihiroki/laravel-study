@@ -1,35 +1,33 @@
-FROM php:7.3-apache-stretch
+FROM centos:7.3.1611
 
-RUN apt-get update
-RUN apt-get install -y \
-    zlib1g-dev \
-    libzip-dev \
-    git
+# EPELリポジトリ
+RUN yum -y install epel-release
+# Remiリポジトリ
+RUN rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
 
-RUN docker-php-ext-install zip
-RUN docker-php-ext-install pdo_mysql
+# PHPインストール
+RUN yum install -y --enablerepo=remi,remi-php73 php php-cli php-common php-devel php-gd php-json php-mbstring php-mcrypt php-mysqlnd php-pdo php-xml
+
+# 諸々
+RUN yum install -y git bash openssl libpng-devel make gcc libtool gcc-c++ nasm
+RUN yum update -y
 
 # nvmを入れる（nodeバージョン管理）
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.2/install.sh | bash
 
-# npm & nodejs install
-RUN apt-get install -y gnupg
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get install -y nodejs
-RUN nodejs -v
-RUN npm install -g n
-RUN npm -v
+# nodeを入れる
+RUN source ~/.nvm/nvm.sh && \
+nvm install 13.5.0 && \
+nvm alias default 13.5.0 && \
+nvm use default
 
-# エディタ
-RUN apt-get install vim -y
+# confファイル更新
+COPY ./httpd.conf /etc/httpd/conf/httpd.conf
 
-# 各種設定
-COPY php.ini /usr/local/etc/php
-
-# apache2
-COPY apache2.conf /etc/apache2
-COPY 000-default.conf /etc/apache2/sites-available/
-
+# マウントに必要なファイルを作る
+RUN mkdir /var/www/html/public
 
 EXPOSE 80 443
 
+# Apache起動
+CMD httpd -D FOREGROUND
