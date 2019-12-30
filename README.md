@@ -11,12 +11,12 @@ Laravel Framework 6.7.0
 $ npm -v
 6.13.4
 $ node -v
-v10.18.0
+v13.5.0
 ```
 ### PHP 
 ```
 $ php -v
-PHP 7.3.12 (cli) (built: Nov 22 2019 16:56:59) ( NTS )
+PHP 7.3.13 (cli) (built: Dec 17 2019 10:29:15) ( NTS )
 ```
 
 ### docker 
